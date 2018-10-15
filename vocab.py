@@ -16,8 +16,7 @@ PAD = 'PAD'
 UNK = 'UNK'
 
 class Vocab:
-    def __init__(self, name):
-        self.name = name
+    def __init__(self):
         self.word2idx = {'PAD': 0, 'UNK': 1}
         self.word2count = {}
         self.idx2word = {}
