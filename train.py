@@ -69,7 +69,7 @@ def train_epochs(model, data_set, optimizer, criterion):
                 avg_loss = total_loss / opt.log_interval
                 # reset total_loss
                 total_loss = 0
-                logger.info('train epoch: %d\titer/iters: %d%%\tloss: %.4f' %
+                logger.info('train-----------> epoch: %d\titer/iters: %d%%\tloss: %.4f' %
                             (epoch, iter / iters * 100, avg_loss))
 
         # eval
@@ -142,7 +142,7 @@ def evaluate(model, data_set, criterion, task='eval'):
             output_labels = output.argmax(dim=1).detach()
             accuracy, precision, recall, f1 = compute_metrics(output_labels, labels)
             total_accuracy += accuracy
-            total_recision += precision
+            total_precision += precision
             total_recall += recall
             total_f1 += f1
 
@@ -165,14 +165,14 @@ def compute_metrics(output_labels, labels):
                 FP += 1
             elif output_label == 1 and label == 0:
                 FN += 1
-                
+
     accuracy = (TP + TN) / (TP + FP + TN + FN)
     precision = TP / (TP + FP)
     recall = TP / (TP + FN)
     f1 = (2 * precision * recall) / (precision + recall)
 
     return accuracy, precision, recall, f1
-    
+
 
 
 def save_checkpoint(state, is_best, filename='checkpoint.pth'):

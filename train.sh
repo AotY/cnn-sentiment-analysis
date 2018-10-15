@@ -23,7 +23,7 @@ python train.py \
     --test_split 0.2 \
     --seed 7 \
     --device cuda:0 \
-    --log_interval 100 \
+    --log_interval 50 \
     --log_file ./logs/train.log \
     --model_save_path ./models \
     --train_or_eval train \

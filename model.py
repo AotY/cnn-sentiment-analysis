@@ -51,7 +51,6 @@ class CSC(nn.Module):
         """
         inputs: [batch_size, len]
         """
-        print('inputs shape: {}'.format(inputs.shape))
         embedded = self.embedding(inputs) # [batch_size, len, embedding_size]
         embedded = self.dropout(embedded)
 
@@ -68,7 +67,6 @@ class CSC(nn.Module):
 
         # [batch_size, output_channels] out_channels
         fc1_input = max_pool_output.squeeze() #[batch_size, output_channels]
-        print('fc1_input shape: {}'.format(fc1_input.shape))
 
         fc1_output = self.fc1(fc1_input)
         fc2_output = self.fc2(fc1_output)
