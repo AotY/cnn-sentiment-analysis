@@ -83,7 +83,7 @@ def train_epochs(model, data_set, optimizer, criterion):
             'accuracy': eval_accuracy,
             'precision': eval_precision,
             'recall': eval_recall,
-            'eval_f1': eval_f1
+            'f1': eval_f1
         }
 
         # optimizer.state_dict()
