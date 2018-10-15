@@ -16,7 +16,7 @@ python train.py \
     --max_len 50 \
     --min_count 3 \
     --lr 0.005 \
-    --epochs 5 \
+    --epochs 15 \
     --start_epoch 1 \
     --batch_size 64 \
     --eval_split 0.1 \
@@ -27,7 +27,7 @@ python train.py \
     --log_file ./logs/train.log \
     --model_save_path ./models \
     --train_or_eval train \
-    # --checkpoint ./models/checkpoint.epoch-5.pth \
+    --checkpoint ./models/checkpoint.epoch-5.pth \
 
 /
 
