@@ -152,7 +152,7 @@ def evaluate(model, data_set, criterion, task='eval'):
 def compute_metrics(output_labels, labels):
     # compute TP(true positive), FP(false positive), TN(true negative),
     # FN(false negative), then compute metrics
-    TP, FP, TN, FN = (0, 0, 0, 0)
+    TP, FP, TN, FN = (1, 1, 1, 1)
     for output_label, label in zip(output_labels, labels):
         output_label, label = output_label.item(), label.item()
         if output_label == label:

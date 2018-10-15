@@ -18,12 +18,12 @@ python train.py \
     --lr 0.005 \
     --epochs 5 \
     --start_epoch 1 \
-    --batch_size 128 \
+    --batch_size 64 \
     --eval_split 0.1 \
     --test_split 0.2 \
     --seed 7 \
     --device cuda:0 \
-    --log_interval 50 \
+    --log_interval 20 \
     --log_file ./logs/train.log \
     --model_save_path ./models \
     --train_or_eval train \
