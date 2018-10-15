@@ -73,7 +73,7 @@ def train_epochs(model, data_set, optimizer, criterion):
                             (epoch, iter / iters * 100, avg_loss))
 
         # eval
-        eval_loss, eval_accuracy, eval_precison, eval_recall, eval_f1 = evaluate(model, data_set, optimizer, criterion)
+        eval_loss, eval_accuracy, eval_precison, eval_recall, eval_f1 = evaluate(model, data_set, criterion, 'eval')
         # save model of each epoch
         save_state={
             'epoch': epoch,

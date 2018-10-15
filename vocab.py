@@ -16,12 +16,11 @@ PAD = 'PAD'
 UNK = 'UNK'
 
 class Vocab:
-    def __init__(self, name):
-        self.name = name
+    def __init__(self):
         self.word2idx = {'PAD': 0, 'UNK': 1}
         self.word2count = {}
         self.idx2word = {}
-        self.n_words = 2 
+        self.n_words = 2
 
     def add_words(self, words):
         for word in words:
@@ -58,7 +57,7 @@ class Vocab:
     def words_to_id(self, words):
         word_ids = [self.word_to_id(word) for word in words]
         return word_ids
-    
+
     @property
     def size(self):
         return len(self.word2idx)

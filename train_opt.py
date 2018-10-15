@@ -18,7 +18,7 @@ def data_set_opt(parser):
     group.add_argument('--min_count',
                        type=int,
                        required=True,
-                       hlep='threshold for word frequency.')
+                       help='threshold for word frequency.')
 
 def model_opt(parser):
     group = parser.add_argument_group('cnn model opt')
@@ -81,6 +81,15 @@ def train_opt(parser):
                        type=int,
                        default=128,
                        help='batch size')
+
+    group.add_argument('--max_len',
+                       type=int,
+                       default=50,
+                       help='max len of sentence.')
+
+    group.add_argument('--max_norm',
+                       type=float,
+                       help='max norm of the gradients.')
 
     group.add_argument('--eval_split',
                        type=float,

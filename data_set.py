@@ -13,17 +13,18 @@ import random
 
 import torch
 
-from vocab import Vocab()
+from vocab import Vocab
 from nltk.tokenize import word_tokenize
 
+
 class DataSet:
-    def __init__(self, 
+    def __init__(self,
                  data_dir,
                  max_len,
                  min_count,
                  eval_split=0.1,
                  test_split=0.2,
-                 device=None)
+                 device=None):
 
         self.max_len = max_len
         self.min_count = min_count
@@ -61,7 +62,7 @@ class DataSet:
         
         n_train = int((1 - eval_split - test_split) * len(datas))
         n_eval = int(eval_split * len(datas))
-        n_test = len(datas) - self.n_train - self.n_eval
+        n_test = len(datas) - n_train - n_eval
 
         self._data_dict = {
             'train': datas[:n_train],
@@ -89,7 +90,7 @@ class DataSet:
 
     def next_batch(self, task, batch_size):
         next_indicator = self._indicator_dict[task] + batch_size
-        if next_indicator > len(self.size_dict[task]):
+        if next_indicator > self.size_dict[task]:
             self.reset_data(task)
             next_indicator = batch_size
 

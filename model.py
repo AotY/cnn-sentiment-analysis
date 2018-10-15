@@ -45,7 +45,7 @@ class CSC(nn.Module):
         self.fc2 = nn.Linear(32, num_classes)
 
         # log soft max
-        self.softmax = nn.LogSoftMax()
+        self.softmax = nn.LogSoftmax(dim=1)
 
 
     def forward(self, inputs, batch_size):
