@@ -18,6 +18,14 @@ Model overview:
 ### data
 - Movie Review Data: http://www.cs.cornell.edu/people/pabo/movie-review-data/
 
+### performance
+```
+Avg:
+    -accuracy: 0.8270
+    -precision: 0.8380
+    -recall: 0.8261
+    -f1: 0.8305
+```
 ### requirement
 - Pytorch (0.4 +)
 
