@@ -5,10 +5,10 @@
 #
 # Distributed under terms of the MIT license.
 
-# export CUDA_VISIBLE_DEVICES=4
+export CUDA_VISIBLE_DEVICES=5,6,7
 
 python train.py \
-    --filename ./eng-fra.txt \
+    --data_dir data/rt-polaritydata \
     --embedding_size 256 \
     --dropout_p 0.8 \
     --num_classes 2 \
@@ -22,7 +22,7 @@ python train.py \
     --eval_split 0.1 \
     --test_split 0.2 \
     --seed 7 \
-    --device cpu \
+    --device cuda:0 \
     --log_interval 100 \
     --log_file ./logs/train.log \
     --model_save_path ./models \

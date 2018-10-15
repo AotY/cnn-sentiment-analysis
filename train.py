@@ -43,6 +43,9 @@ opt = parser.parse_args()
 device = torch.device(opt.device)
 logger.info('device: {}'.format(device))
 
+if opt.seed:
+    torch.manual_seed(opt.seed)
+
 
 def train_epochs(model, data_set, optimizer, criterion):
     model.train()  # set to train state
@@ -70,7 +73,7 @@ def train_epochs(model, data_set, optimizer, criterion):
                             (epoch, iter / iters * 100, avg_loss))
 
         # eval
-        eval_loss, eval_accuracy, eval_recall, eval_f1 = evaluate(model, data_set, optimizer, criterion)
+        eval_loss, eval_accuracy, eval_precison, eval_recall, eval_f1 = evaluate(model, data_set, optimizer, criterion)
         # save model of each epoch
         save_state={
             'epoch': epoch,
@@ -78,6 +81,7 @@ def train_epochs(model, data_set, optimizer, criterion):
             'optimizer': optimizer.state_dict(),
             'loss': eval_loss,
             'accuracy': eval_accuracy,
+            'precision': eval_precison,
             'recall': eval_recall,
             'eval_f1': f1
         }
@@ -85,7 +89,7 @@ def train_epochs(model, data_set, optimizer, criterion):
         # optimizer.state_dict()
         save_checkpoint(state=save_state,
                         is_best = False,
-                        filename = os.path.join(opt.model_save_path, 'checkpoint.%s.epoch-%d.pth' % (opt.decoder_attn_type, epoch)))
+                        filename = os.path.join(opt.model_save_path, 'checkpoint.epoch-%d.pth' % epoch))
 
 
 
@@ -113,17 +117,15 @@ def train(inputs, inputs_length, labels, model, optimizer, criterion):
 
 
 def evaluate(model, data_set, criterion, task='eval'):
+    total_loss = 0
+    total_accuracy = 0
+    total_precision = 0
+    total_recall = 0
+    total_f1 = 0
+    iters = math.ceil(data_set.size_dict[task] / opt.batch_size )
     model.eval()  # set to evaluate state
     with torch.no_grad():
         data_set.reset_data(task)
-
-        total_loss = 0
-
-        total_accuracy = 0
-        total_recall = 0
-        total_f1 = 0
-
-        iters = math.ceil(data_set.size_dict[task] / opt.batch_size )
 
         for iter in range(1, 1 + iters):
             inputs, inputs_length, labels = data_set.next_batch(task, opt.batch_size)
@@ -135,9 +137,41 @@ def evaluate(model, data_set, criterion, task='eval'):
             total_loss += loss.item()
 
             # accuracy
+            output_labels = output.argmax(dim=1).detach()
+            accuracy, precision, recall, f1 = compute_metrics(output_labels, labels)
+            total_accuracy += accuracy
+            total_precision += precision
+            total_recall += recall
+            total_f1 += f1
 
 
-    return [item / iters for item in [total_loss, total_accuracy, total_recall, total_f1]]
+    return [item / iters for item in [total_loss, total_accuracy, total_precision, total_recall, total_f1]]
+
+def compute_metrics(output_labels, labels):
+    # compute TP(true positive), FP(false positive), TN(true negative),
+    # FN(false negative), then compute metrics
+    TP, FP, TN, FN = (0, 0, 0, 0)
+    for output_label, label in zip(output_labels, labels):
+        output_label, label = output_label.item(), label.item()
+        if output_label == label:
+            if label == 1:
+                TP += 1
+            else:
+                TN += 1
+        else:
+            if output_label == 0 and label == 1:
+                FP += 1
+            elif output_label == 1 and label == 0:
+                FN += 1
+                
+    accuracy = (TP + TN) / (TP + FP + TN + FN)
+    precision = TP / (TP + FP)
+    recall = TP / (TP + FN)
+    f1 = (2 * precision * recall) / (precision + recall)
+
+    return accuracy, precision, recall, f1
+    
+
 
 def save_checkpoint(state, is_best, filename='checkpoint.pth'):
     '''
@@ -182,7 +216,6 @@ def build_criterion():
 
 
 
-
 if __name__ == "__main__":
 
     # train()
@@ -207,10 +240,12 @@ if __name__ == "__main__":
         opt.start_epoch = checkpoint['epoch'] + 1
         loss = checkpoint['loss']
         accuracy = checkpoint['accuracy']
+        precision = checkpoint['precision']
         recall = checkpoint['recall']
         f1 = checkpoint['f1']
         logger.info('checkpoint loss: {}'.format(loss))
         logger.info('checkpoint accuracy: {}'.format(accuracy))
+        logger.info('checkpoint precision: {}'.format(precision))
         logger.info('checkpoint recall: {}'.format(recall))
         logger.info('checkpoint f1: {}'.format(f1))
 
