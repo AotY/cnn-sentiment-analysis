@@ -34,7 +34,7 @@ class DataSet:
         self._data_dict = None
         self._indicator_dict = None
 
-       self.load_data(data_dir, eval_split, test_split)
+        self.load_data(data_dir, eval_split, test_split)
 
     def load_data(self, data_dir, eval_split, test_split):
         datas = []
@@ -55,31 +55,31 @@ class DataSet:
                     self.vocab.add_words(tokens)
 
                     datas.append((tokens, label))
-        
-        self.vocab.build_vocab(min_count)
 
-        random.shuffle(datas) 
-        
+        self.vocab.build_vocab(self.min_count)
+
+        random.shuffle(datas)
+
         n_train = int((1 - eval_split - test_split) * len(datas))
         n_eval = int(eval_split * len(datas))
         n_test = len(datas) - n_train - n_eval
 
         self._data_dict = {
-            'train': datas[:n_train],
-            'eval': datas[n_train: n_train + n_eval],
-            'test': datas[n_train + n_eval: ]
-        }
+                'train': datas[:n_train],
+                'eval': datas[n_train: n_train + n_eval],
+                'test': datas[n_train + n_eval: ]
+                }
 
         self._indicator_dict = {
-            'train': 0,
-            'eval': 0,
-            'test': 0
-        }
+                'train': 0,
+                'eval': 0,
+                'test': 0
+                }
         self.size_dict = {
-            'train': n_train,
-            'eval': n_eval,
-            'test': n_test
-        }
+                'train': n_train,
+                'eval': n_eval,
+                'test': n_test
+                }
 
     def reset_data(self, task):
         random.shuffle(self._data_dict[task])
@@ -95,12 +95,12 @@ class DataSet:
             next_indicator = batch_size
 
         inputs = torch.ones((batch_size, self.max_len),
-                            dtype=torch.long,
-                            device=self.device) * self.vocab.pad_id
+                dtype=torch.long,
+                device=self.device) * self.vocab.pad_id
         inputs_length = []
         labels = torch.zeros(batch_size,
-                              dtype=torch.long,
-                              device=self.device)
+                dtype=torch.long,
+                device=self.device)
         bacth_datas = self._data_dict[task][self._indicator_dict[task]: next_indicator]
         for batch_id, (tokens, label) in enumerate(bacth_datas):
             tokens_id = self.vocab.words_to_id(tokens)
@@ -114,4 +114,4 @@ class DataSet:
 
         self._indicator_dict[task] = next_indicator
 
-        return inputs, inputs_length, labels 
+        return inputs, inputs_length, labels

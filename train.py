@@ -73,7 +73,7 @@ def train_epochs(model, data_set, optimizer, criterion):
                             (epoch, iter / iters * 100, avg_loss))
 
         # eval
-        eval_loss, eval_accuracy, eval_precison, eval_recall, eval_f1 = evaluate(model, data_set, criterion, 'eval')
+        eval_loss, eval_accuracy, eval_precision, eval_recall, eval_f1 = evaluate(model, data_set, criterion, 'eval')
         # save model of each epoch
         save_state={
             'epoch': epoch,
@@ -81,7 +81,7 @@ def train_epochs(model, data_set, optimizer, criterion):
             'optimizer': optimizer.state_dict(),
             'loss': eval_loss,
             'accuracy': eval_accuracy,
-            'precision': eval_precison,
+            'precision': eval_precision,
             'recall': eval_recall,
             'eval_f1': f1
         }
@@ -91,6 +91,8 @@ def train_epochs(model, data_set, optimizer, criterion):
                         is_best = False,
                         filename = os.path.join(opt.model_save_path, 'checkpoint.epoch-%d.pth' % epoch))
 
+        logger.info('eval---------> epoch: %d, loss: %.4f, accuracy: %.4f, precision: %.4f, recall: %.4f, f1: %.4f' % \
+                    (epoch, eval_loss, eval_accuracy, eval_precision, eval_recall, eval_f1))
 
 
 def train(inputs, inputs_length, labels, model, optimizer, criterion):
@@ -140,7 +142,7 @@ def evaluate(model, data_set, criterion, task='eval'):
             output_labels = output.argmax(dim=1).detach()
             accuracy, precision, recall, f1 = compute_metrics(output_labels, labels)
             total_accuracy += accuracy
-            total_precision += precision
+            total_recision += precision
             total_recall += recall
             total_f1 += f1
 

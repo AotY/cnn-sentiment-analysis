@@ -9,7 +9,7 @@ export CUDA_VISIBLE_DEVICES=5,6,7
 
 python train.py \
     --data_dir data/rt-polaritydata \
-    --embedding_size 256 \
+    --embedding_size 300 \
     --dropout_p 0.8 \
     --num_classes 2 \
     --max_norm 50.0 \
