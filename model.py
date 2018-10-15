@@ -51,6 +51,7 @@ class CSC(nn.Module):
         """
         inputs: [batch_size, len]
         """
+        print('inputs shape: {}'.format(inputs.shape))
         embedded = self.embedding(inputs) # [batch_size, len, embedding_size]
         embedded = self.dropout(embedded)
 
@@ -58,18 +59,15 @@ class CSC(nn.Module):
         conv1_output = self.conv1(embedded.unsqueeze(1))
         conv1_output = F.relu(conv1_output)
         conv1_output = conv1_output.squeeze(3).transpose(1, 2) # [batch_size, len - stride + 1, output_channels]
-        print('conv1_output shape: {}'.format(conv1_output.shape))
 
         conv2_output = self.conv2(conv1_output.unsqueeze(1))
         conv2_output = F.relu(conv2_output)
-        print('conv2_output shape: {}'.format(conv2_output.shape))
 
         # max pool [batch_size, output_channels, 1, 1]
         max_pool_output = F.max_pool2d(conv2_output, kernel_size=(conv2_output.shape[2], 1))
-        print('max_pool_output shape: {}'.format(max_pool_output.shape))
 
         # [batch_size, output_channels] out_channels
-        fc1_input = max_pool_output.view(batch_size, -1)
+        fc1_input = max_pool_output.squeeze() #[batch_size, output_channels]
         print('fc1_input shape: {}'.format(fc1_input.shape))
 
         fc1_output = self.fc1(fc1_input)
